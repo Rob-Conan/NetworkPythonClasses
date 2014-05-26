@@ -304,23 +304,41 @@ Duplex: full
 '''
 
 items = {}
-for cdp in (sw1_show_cdp_neighbors_detail, r1_show_cdp_neighbors_detail, r2_show_cdp_neighbors_detail, r3_show_cdp_neighbors_detail, r4_show_cdp_neighbors_detail, r5_show_cdp_neighbors_detail):
-  lines = cdp.split('\n')
+for cdp_detail in (sw1_show_cdp_neighbors_detail, r1_show_cdp_neighbors_detail, r2_show_cdp_neighbors_detail, r3_show_cdp_neighbors_detail, r4_show_cdp_neighbors_detail, r5_show_cdp_neighbors_detail):
+  lines = cdp_detail.split('\n')
   for line in lines:
     if 'Device ID:' in line:
-      name = line.split()[2:].pop()
-      items[name] = {}
+      name = line.split()[2]
+      if not name in items:             #If the host name does not exist add it
+        items[name] = {}
     elif 'IP address:' in line:
-      ip_addr = line.split()[2:].pop()
+      ip_addr = line.split()[2]
       items[name]['ip'] = ip_addr
     elif 'Platform' in line:
-      vendor = line.split()[1:2].pop()
+      vendor = line.split()[1]
       temp = line.split(',')
       model = temp[0].split()[2]
       device_type = temp[1].split()[1]
       items[name]['vendor'] = vendor
       items[name]['model'] = model
       items[name]['device_type'] = device_type
+
+for cdp in (sw1_show_cdp_neighbors, r1_show_cdp_neighbors, r2_show_cdp_neighbors, r3_show_cdp_neighbors, r4_show_cdp_neighbors, r5_show_cdp_neighbors):
+  cdp_lines = cdp.split('\n')
+  close = []
+  for line in cdp_lines:
+    if 'show cdp neighbors' in line:
+      hostname = line.split('>')[0]
+    #  print hostname
+    elif 'Device ID' in line or 'Capability Codes:' in line or 'S - Switch' in line:
+      continue
+    else:
+      if not len(line.split()) == 0:
+        close.append(line.split()[0])
+
+  items[hostname]['adjacent_devices'] = close
+
+
 
 
 pprint.pprint(items)
