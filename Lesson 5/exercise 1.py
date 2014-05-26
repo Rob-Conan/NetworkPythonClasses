@@ -1,3 +1,10 @@
+## Exercise 1
+## Parse the outputs below to achieve nested dictionaries of 
+## Hostanme, ip, model, vendor, device_type
+## Exercise 2
+## Expand on Exercise 1 and add in neighbouring network points
+## based on the output of X_show_cdp_neighbours
+
 
 import pprint
 
