@@ -1,3 +1,7 @@
+# Expanding on Class 3 exercise 3
+# Create a tes module for the IP validator
+# Updated the function to catch ValueErrors
+
 import sys
 import math
 
